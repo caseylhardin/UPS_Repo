@@ -15,6 +15,7 @@ namespace EncodingTest
             string StringToBeEncoded = "";
             Encoding Encoder = new Encoding();
             bool GoAgain = true;
+            bool DoneReading = false;
 
             while (GoAgain == true)
             { 
@@ -22,17 +23,21 @@ namespace EncodingTest
             Console.WriteLine("Please enter in 3 letters from A to Z.");
             do
             {
-                char c = Console.ReadKey().KeyChar;
-                if (char.IsLetter(c))
-                {
-                    StringToBeEncoded += c;
-                }
-                else
-                {
-                    StringToBeEncoded = "";
-                    Console.WriteLine('\n' + "Please enter only 4 letters from A to Z.");
-                }                                  
-            } while (StringToBeEncoded.Length < 4); // Limit to 4 chars
+                ConsoleKeyInfo c = Console.ReadKey();
+                    if (char.IsLetter(c.KeyChar))
+                    {
+                        StringToBeEncoded += c.KeyChar;
+                    }
+                    else if (c.Key != ConsoleKey.Enter && !char.IsLetter(c.KeyChar))
+                    {
+                        StringToBeEncoded = "";
+                        Console.WriteLine('\n' + "Please enter only 3 letters from A to Z.");
+                    }
+                    else if(c.Key == ConsoleKey.Enter)
+                    {
+                        DoneReading = true;
+                    }
+                } while (DoneReading == false);
 
             Encoder.SetupEncoder(StringToBeEncoded);
 
@@ -42,10 +47,11 @@ namespace EncodingTest
                 char c2 = Console.ReadKey().KeyChar;
                 if (char.IsLetter(c2) && c2 == 'y')
                 { 
-
+                    DoneReading = false;
                     StringToBeEncoded = "";
                     Encoder.CleanUpEncoder();
                     Console.WriteLine('\n');
+                    
                 }
                 else
                 {
