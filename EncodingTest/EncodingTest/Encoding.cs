@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,26 +9,55 @@ namespace EncodingTest
     
     class Encoding
     {       
-        List<int> EncodedNumberValues;
-        string FullEncodedString;
-     
-        public void SetupEncoder(string StringToBeEncoded)
-        {            
-            EncodedNumberValues = new List<int>();
-            for(int i=0; i < StringToBeEncoded.Length;i++)
+        List<List<int>> EncodedNumberValues;
+        private List<string> fullEncodedString;
+        string StringBeingEncoded;
+
+        List<string> StringsYouwantEncoded;
+
+        public List<string> FullEncodedString
+        {
+            get
             {
-                EncodedNumberValues.Add(ConvertToNumber(StringToBeEncoded[i]));
+                return fullEncodedString;
+            }
+
+            set
+            {
+                fullEncodedString = value;
+            }
+        }
+
+        public void SetupEncoder(List<string> StringsToBeEncoded)
+        {
+            EncodedNumberValues = new List<List<int>>();
+            StringsYouwantEncoded = new List<string>();
+            FullEncodedString = new List<string>();
+
+            string tempstring;
+            List<int> TempNumberList = new List<int>();
+
+            for (int a = 0; a < StringsToBeEncoded.Count; a++)
+            {
+                tempstring = StringsToBeEncoded[a];
+                EncodedNumberValues.Add(new List<int>());
+
+                for (int i = 0; i < tempstring.Length; i++)
+                {
+                    EncodedNumberValues[a].Add(ConvertToNumber(tempstring[i]));
+                }
             }
 
         }
         public void CleanUpEncoder()
         {
             EncodedNumberValues.Clear();
-            FullEncodedString = "";
-        }
+            FullEncodedString.Clear();
+            StringsYouwantEncoded.Clear();
+    }
 
 
-        public string StartEncoding()
+        public void StartEncoding()
         {
 
             //AtoE = 1 to 5
@@ -36,112 +65,122 @@ namespace EncodingTest
             //KtoO = 11 to 15
             //PtoT = 16 to 20
             //UtoZ = 21 to 26
-
-            for (int i = 0; i < EncodedNumberValues.Count; i++)
+            for (int a = 0; a < EncodedNumberValues.Count; a++)
             {
-                if (EncodedNumberValues[i] >= 1 && EncodedNumberValues[i] <= 5)
-                {
-                    FullEncodedString += AtoE(i);
-                }
-                else if (EncodedNumberValues[i] >= 6 && EncodedNumberValues[i] <= 10)
-                {
-                    FullEncodedString += FtoJ(i);
-                }
-                else if (EncodedNumberValues[i] >= 11 && EncodedNumberValues[i] <= 15)
-                {
-                    FullEncodedString += KtoO(i);
-                }
-                else if (EncodedNumberValues[i] >= 16 && EncodedNumberValues[i] <= 20)
-                {
-                    FullEncodedString += PtoT(i);
-                }
-                else if (EncodedNumberValues[i] >= 21 && EncodedNumberValues[i] <= 26)
-                {
-                    FullEncodedString += UtoZ(i);
-                }
+                StringBeingEncoded = "";
 
-            }            
-            return FullEncodedString;
+                for (int i = 0; i < EncodedNumberValues[a].Count; i++)
+                {
+                                  
+                    if (EncodedNumberValues[a][i] >= 1 && EncodedNumberValues[a][i] <= 5)
+                    {
+                     
+                        StringBeingEncoded += AtoE(a,i);
+                    }
+                    else if (EncodedNumberValues[a][i] >= 6 && EncodedNumberValues[a][i] <= 10)
+                    {
+  
+                        StringBeingEncoded += FtoJ(a,i);
+                    }
+                    else if (EncodedNumberValues[a][i] >= 11 && EncodedNumberValues[a][i] <= 15)
+                    {
+                        
+                        StringBeingEncoded += KtoO(a,i);
+                    }
+                    else if (EncodedNumberValues[a][i] >= 16 && EncodedNumberValues[a][i] <= 20)
+                    {
+                        
+                        StringBeingEncoded += PtoT(a,i);
+                    }
+                    else if (EncodedNumberValues[a][i] >= 21 && EncodedNumberValues[a][i] <= 26)
+                    {
+                        
+                        StringBeingEncoded += UtoZ(a,i);
+                    }
+                    
+                }
+                FullEncodedString.Add(StringBeingEncoded);
+            }           
         }
         //Multiple value by 2.
-        public char AtoE(int Index)
+        public char AtoE(int index1,int Index2)
         {
-            if (Index == 0)
+            if (Index2 == 0)
             {
-                return LoopCalculation(1, EncodedNumberValues[Index]*2);
+                return LoopCalculation(1, EncodedNumberValues[index1][Index2]*2);
             }
             else
             {
-                return LoopCalculation(ConvertToNumber(FullEncodedString[Index - 1]), EncodedNumberValues[Index] * 2);
+                return LoopCalculation(ConvertToNumber(StringBeingEncoded[Index2 - 1]), EncodedNumberValues[index1][Index2] * 2);
             }
         }
 
         //Divide its numerical value by 3, multiple the remainder by 5.
-        public char FtoJ(int Index)
+        public char FtoJ(int index1, int Index2)
         {
 
             int RemainderMultiplied;
-            RemainderMultiplied = ((EncodedNumberValues[Index] % 3) * 5);
+            RemainderMultiplied = ((EncodedNumberValues[index1][Index2] % 3) * 5);
 
-            if (Index == 0)
+            if (Index2 == 0)
             {
                 return LoopCalculation(1, RemainderMultiplied);
             }
             else
             {
-                return LoopCalculation(ConvertToNumber(FullEncodedString[Index - 1]), RemainderMultiplied);
+                return LoopCalculation(ConvertToNumber(StringBeingEncoded[Index2 - 1]), RemainderMultiplied);
             }
         }
 
         //Divide its numerical value by 4, multiply the interger part of the quotient by 8.
-        public char KtoO(int Index)
+        public char KtoO(int index1, int Index2)
         {
 
-            int FullNumberMulti = ((EncodedNumberValues[Index] / 4) * 8);
-            if (Index == 0)
+            int FullNumberMulti = ((EncodedNumberValues[index1][Index2] / 4) * 8);
+            if (Index2 == 0)
             {
                 return LoopCalculation(1, FullNumberMulti);
             }
             else
             {
-                return LoopCalculation(ConvertToNumber(FullEncodedString[Index - 1]), FullNumberMulti);
+                return LoopCalculation(ConvertToNumber(StringBeingEncoded[Index2 - 1]), FullNumberMulti);
             }
         }
 
         //Multiply the sum of the digits of its numerical value by 10
-        public char PtoT(int Index)
+        public char PtoT(int index1, int Index2)
         {
-            int SumMulti = SumDigits(EncodedNumberValues[Index]) * 10;
+            int SumMulti = SumDigits(EncodedNumberValues[index1][Index2]) * 10;
 
-            if (Index == 0)
+            if (Index2 == 0)
             {
                 return LoopCalculation(1, SumMulti);
             }
             else
             {
-                return LoopCalculation(ConvertToNumber(FullEncodedString[Index - 1]), SumMulti);
+                return LoopCalculation(ConvertToNumber(StringBeingEncoded[Index2 - 1]), SumMulti);
             }          
         }
 
         //Find the largest integer factor of its numerical value less than the value itself. Multiple by 12.
-        public char UtoZ(int Index)
+        public char UtoZ(int index1, int Index2)
         {
 
             int HighestFactor = 0;            
-            for (int i=1; i < EncodedNumberValues[Index]; i++)
+            for (int i=1; i < EncodedNumberValues[index1][Index2]; i++)
             {
-                if(EncodedNumberValues[Index] % i == 0 && i > HighestFactor)
+                if(EncodedNumberValues[index1][Index2] % i == 0 && i > HighestFactor)
                 {
                     HighestFactor = i;
                 }
             }
-            if (Index == 0)
+            if (Index2 == 0)
             {
                 return LoopCalculation(1, HighestFactor * 12);
             }
             else
             {
-                return LoopCalculation(ConvertToNumber(FullEncodedString[Index - 1]), HighestFactor * 12);
+                return LoopCalculation(ConvertToNumber(StringBeingEncoded[Index2 - 1]), HighestFactor * 12);
             }
         }
 
