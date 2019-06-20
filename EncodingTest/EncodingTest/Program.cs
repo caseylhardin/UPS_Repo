@@ -30,9 +30,9 @@ namespace EncodingTest
                 else
                 {
                     StringToBeEncoded = "";
-                    Console.WriteLine('\n' + "Please enter only 3 letters from A to Z.");
+                    Console.WriteLine('\n' + "Please enter only 4 letters from A to Z.");
                 }                                  
-            } while (StringToBeEncoded.Length < 3); // Limit to 3 chars
+            } while (StringToBeEncoded.Length < 4); // Limit to 4 chars
 
             Encoder.SetupEncoder(StringToBeEncoded);
 
