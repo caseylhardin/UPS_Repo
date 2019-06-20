@@ -20,7 +20,7 @@ namespace EncodingTest
             while (GoAgain == true)
             { 
             
-            Console.WriteLine("Please enter in 3 letters from A to Z.");
+            Console.WriteLine("Please enter in letters from A to Z.");
             do
             {
                 ConsoleKeyInfo c = Console.ReadKey();
@@ -31,7 +31,7 @@ namespace EncodingTest
                     else if (c.Key != ConsoleKey.Enter && !char.IsLetter(c.KeyChar))
                     {
                         StringToBeEncoded = "";
-                        Console.WriteLine('\n' + "Please enter only 3 letters from A to Z.");
+                        Console.WriteLine('\n' + "Please enter only letters from A to Z.");
                     }
                     else if(c.Key == ConsoleKey.Enter)
                     {
